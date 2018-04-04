@@ -1,7 +1,8 @@
 import pygame
 from random import *
 from queue import Queue
-    
+from collections import deque
+
 def draw_body(x_body, y_body):
     pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(x_body, y_body, squareSize, squareSize))
 
@@ -10,18 +11,18 @@ def move():
 
     x_pos += x_speed_direction * squareSize
     y_pos += y_speed_direction * squareSize
-    x_body.put(x_pos)
-    y_body.put(y_pos)
-    x_body.get()
-    y_body.get()
+    x_body.append(x_pos)
+    y_body.append(y_pos)
+    x_body.popleft()
+    y_body.popleft()
     
 def move_eaten():
     global x_pos, y_pos
 
     x_pos += x_speed_direction * squareSize
     y_pos += y_speed_direction * squareSize
-    x_body.put(x_pos)
-    y_body.put(y_pos)
+    x_body.append(x_pos)
+    y_body.append(y_pos)
 
 def set_speed(x, y):
     global x_speed_direction, y_speed_direction
@@ -46,10 +47,13 @@ screen = pygame.display.set_mode((formSize, formSize))
 squareSize = 20
 x_pos = screen.get_rect()[2] / 2 - squareSize / 2 
 y_pos = screen.get_rect()[3] / 2 - squareSize / 2
-x_body = Queue()
-x_body.put(x_pos)
-y_body = Queue()
-y_body.put(y_pos)
+
+x_body = deque()
+x_body.append(x_pos)
+y_body = deque()
+y_body.append(y_pos)
+
+
 #point
 radius = 3
 x_point_pos = (randint(squareSize/2, formSize - squareSize/2)//squareSize)*squareSize
@@ -76,22 +80,24 @@ while not done:
     
     screen.fill((0, 0, 0))
     button = False
-    if not eaten:
-        move()
-    else:
-        move_eaten()
-        eaten = False
-    for i in range (0, counter):
-        draw_body(x_body.queue[i], y_body.queue[i])
+    eaten = False
         
+    for i in range (0, counter):
+        draw_body(x_body[i], y_body[i])
+
     if x_point_pos == (x_pos + squareSize/2) and y_point_pos == (y_pos + squareSize/2):            
+        x_body.appendleft(x_body[0])
+        y_body.appendleft(y_body[0])
+        
         counter += 1
         if counter % 10 == 0:
             time = time * 1.2
         move_point()
         eaten = True
+        
     if not eaten:
         draw_point()
+    
     for event in pygame.event.get():            
         if event.type == pygame.QUIT:
             done = True
@@ -125,7 +131,7 @@ while not done:
                     continue
                 else:
                     continue
- 
+    move()
     pygame.display.flip()
     clock.tick(time)
     
