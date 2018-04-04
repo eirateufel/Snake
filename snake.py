@@ -71,7 +71,9 @@ done = False
 counter = 1
 eaten = False
 button = False
+
 while not done:
+    
     screen.fill((0, 0, 0))
     button = False
     if not eaten:
@@ -125,6 +127,5 @@ while not done:
                     continue
  
     pygame.display.flip()
-
     clock.tick(time)
     
