@@ -1,10 +1,6 @@
-#comment2
 import pygame
 from random import *
 from queue import Queue
-
-def draw():
-    pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(x_pos, y_pos, squareSize, squareSize))
     
 def draw_body(x_body, y_body):
     pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(x_body, y_body, squareSize, squareSize))
@@ -12,8 +8,8 @@ def draw_body(x_body, y_body):
 def move():
     global x_pos, y_pos
 
-    x_pos += x_speed_direction * speed
-    y_pos += y_speed_direction * speed
+    x_pos += x_speed_direction * squareSize
+    y_pos += y_speed_direction * squareSize
     x_body.put(x_pos)
     y_body.put(y_pos)
     x_body.get()
@@ -22,8 +18,8 @@ def move():
 def move_eaten():
     global x_pos, y_pos
 
-    x_pos += x_speed_direction * speed
-    y_pos += y_speed_direction * speed
+    x_pos += x_speed_direction * squareSize
+    y_pos += y_speed_direction * squareSize
     x_body.put(x_pos)
     y_body.put(y_pos)
 
@@ -61,7 +57,6 @@ y_point_pos = (randint(squareSize/2, formSize - squareSize/2)//squareSize)*squar
 point_color = (255, 165, 0)
 
 
-speed = 20
 time = 30/20
 x_speed_direction = 1
 y_speed_direction = 0
@@ -73,7 +68,7 @@ screen = pygame.display.set_mode((formSize, formSize))
 clock = pygame.time.Clock()
 
 done = False
-counter = 0
+counter = 1
 eaten = False
 button = False
 while not done:
@@ -81,10 +76,8 @@ while not done:
     button = False
     if not eaten:
         move()
-        draw()
     else:
         move_eaten()
-        draw()
         eaten = False
     for i in range (0, counter):
         draw_body(x_body.queue[i], y_body.queue[i])
