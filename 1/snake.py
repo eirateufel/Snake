@@ -2,7 +2,6 @@ import pygame
 from random import *
 from queue import Queue
 from collections import deque
-
 from Score import Score
 
 def draw_body(x_body, y_body):
@@ -62,18 +61,17 @@ x_point_pos = (randint(squareSize/2, formSize - squareSize/2)//squareSize)*squar
 y_point_pos = (randint(squareSize/2, formSize - squareSize/2)//squareSize)*squareSize
 point_color = (255, 165, 0)
 
-#Score
-pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 30)
-score = Score(screen, font)
-
-time = 30/50
+time = 30/20
 x_speed_direction = 1
 y_speed_direction = 0
 
 pygame.init()
 screen = pygame.display.set_mode((formSize, formSize))
 
+#Score
+pygame.font.init()
+font = pygame.font.SysFont('Comic Sans MS', 30)
+score = Score(screen, font)
 
 clock = pygame.time.Clock()
 
@@ -83,10 +81,13 @@ eaten = False
 button = False
 
 while not done:
-
+    
     screen.fill((0, 0, 0))
     button = False
     eaten = False
+        
+    for i in range (0, counter):
+        draw_body(x_body[i], y_body[i])
 
     if x_point_pos == (x_pos + squareSize/2) and y_point_pos == (y_pos + squareSize/2):            
         x_body.appendleft(x_body[0])
@@ -101,7 +102,7 @@ while not done:
         
     if not eaten:
         draw_point()
-
+    
     for event in pygame.event.get():            
         if event.type == pygame.QUIT:
             done = True
@@ -136,10 +137,6 @@ while not done:
                 else:
                     continue
     move()
-
-    for i in range(0, counter):
-        draw_body(x_body[i], y_body[i])
-
     score.draw()
     pygame.display.flip()
     clock.tick(time)
