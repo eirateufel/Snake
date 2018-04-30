@@ -16,3 +16,9 @@ class Score:
 
     def increase(self):
         self.value += 10
+
+    def decrease(self, negative_scores):
+        self.value += negative_scores
+
+    def get_value(self):
+        return self.value

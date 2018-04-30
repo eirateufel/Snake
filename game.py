@@ -5,7 +5,7 @@ from queue import Queue
 from collections import deque
 
 from Score import Score
-from Snake import Snake
+from snake import Snake
 
 
 def draw_point():
@@ -41,7 +41,7 @@ score = Score(screen, font)
 #Snake
 snake = Snake(screen, 20)
 
-time = 30/15
+time = 2
 x_speed_direction = 1
 y_speed_direction = 0
 
@@ -113,14 +113,19 @@ while not done:
 
     score.draw()
 
-    if snake.is_self_intersect():
-        snake.set_speed(0, 0)
-        screen.fill((0, 0, 0))
-        pygame.font.Font(None, 80)
-        text = font.render("GAME OVER!", False, (255, 255, 255))
-        screen_width = screen.get_rect()[2]
-        screen_height = screen.get_rect()[3]
-        screen.blit(text, (screen_width/2 - text.get_width()/2, screen_height/2))
+    intersect_result = snake.is_self_intersect()
+    if intersect_result != 0:
+        score.decrease(intersect_result)
+        if score.get_value() < 0:
+            snake.set_speed(0, 0)
+            screen.fill((0, 0, 0))
+            pygame.font.Font(None, 80)
+            text = font.render("GAME OVER!", False, (255, 255, 255))
+            screen_width = screen.get_rect()[2]
+            screen_height = screen.get_rect()[3]
+            screen.blit(text, (screen_width/2 - text.get_width()/2, screen_height/2))
+
+
 
     pygame.display.flip()
     clock.tick(time)

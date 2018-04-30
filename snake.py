@@ -23,7 +23,17 @@ class Snake:
 
     def move(self):
         self.x_pos += self.x_speed_direction * self.square_size
+        if self.x_pos > self.screen_width:
+            self.x_pos = self.x_pos - self.screen_width
+        elif self.x_pos < 0:
+            self.x_pos = self.screen_width - self.x_pos
+
         self.y_pos += self.y_speed_direction * self.square_size
+        if self.y_pos > self.screen_height:
+            self.y_pos = self.y_pos - self.screen_height
+        elif self.y_pos < 0:
+            self.y_pos = self.screen_height - self.y_pos
+
         self.x_body.append(self.x_pos)
         self.y_body.append(self.y_pos)
         self.x_body.popleft()
@@ -42,8 +52,14 @@ class Snake:
     def is_self_intersect(self):
         for i in range(0, self.counter - 1):  # off with her head
             if self.x_body[i] == self.x_pos and self.y_body[i] == self.y_pos:
-                return True
-        return False
+                negativeScores = 0
+                for j in range(0, i + 1):
+                    self.x_body.popleft()
+                    self.y_body.popleft()
+                    self.counter -= 1
+                    negativeScores -= 15
+                return negativeScores
+        return 0
 
     def eat_point(self):
         self.x_body.appendleft(self.x_body[0])
